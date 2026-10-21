@@ -1,42 +1,138 @@
-# QA Portfolio — Playwright + TypeScript
+# QualityForge QA Automation
 
-End-to-end and API test automation suite built with [Playwright](https://playwright.dev) and TypeScript, using the Page Object Model. Runs against [Sauce Demo](https://www.saucedemo.com) (UI) and [jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com) (API) — both free, publicly available services intended for test automation practice.
+**A Playwright + TypeScript automation framework for UI and REST API testing.**
 
-![Playwright Tests](https://github.com/oscar-leung/qa-portfolio/actions/workflows/playwright.yml/badge.svg)
+QualityForge is a QA automation portfolio project focused on validating real-world e-commerce workflows, API behavior, and application reliability using maintainable automated tests.
 
-## What's covered
+## Project Highlights
 
-- **Login** — valid credentials, locked-out user, wrong password, empty-field validation
-- **Inventory** — sorting (price and name), add-to-cart, cart badge state
-- **Cart & checkout** — item removal, form validation, full happy-path purchase
-- **A documented UI defect** — `problem_user` renders a duplicate broken image for every product; captured as an expected-failure test via `test.fail()` rather than skipped or silently ignored
-- **API** — GET/POST/PUT/DELETE against a REST API, including a 404 case
+- **UI Automation:** Login, inventory sorting, cart management, and checkout workflows.
+- **API Testing:** REST API validation covering GET, POST, PUT, and DELETE requests.
+- **Page Object Model:** Reusable page classes for maintainable test code.
+- **Authentication Reuse:** Shared authenticated browser state for relevant test suites.
+- **Negative Testing:** Invalid credentials, missing fields, and expected error responses.
+- **CI/CD:** GitHub Actions workflow for automated test execution.
+- **Debugging:** Playwright HTML reports, screenshots, and traces where configured.
 
-26 tests total across 4 Playwright projects (`setup`, `login`, `authenticated`, `api`), plus a `firefox` project configured for cross-browser coverage on demand.
+## Tech Stack
 
-## Why it's structured this way
+| Technology | Purpose |
+|---|---|
+| TypeScript | Test implementation |
+| Playwright Test | Browser and API automation |
+| Node.js / npm | Runtime and dependency management |
+| GitHub Actions | Continuous integration |
+| Page Object Model | Test architecture |
 
-- **Page Object Model** (`/pages`) — one class per page/flow, so a selector change only needs updating in one place, and tests read like plain English steps instead of raw locator calls.
-- **Auth reuse via `storageState`** (`tests/auth.setup.ts`) — logs in once, saves the session, and every test in the `authenticated` project starts already logged in. Login itself still gets fully tested — it just runs in its own project (`login`) that intentionally has no stored session.
-- **Separate `api` project** — pure HTTP checks via Playwright's `request` fixture, no browser involved, pointed at a different `baseURL` than the UI projects.
+## Test Coverage
 
-Full reasoning behind these decisions — and the interview questions they map to — is in [`STUDY_GUIDE.md`](./STUDY_GUIDE.md).
+### UI Tests
+- Login validation and authentication scenarios
+- Inventory sorting by price and name
+- Adding single and multiple items to the cart
+- Cart item removal
+- Checkout form validation
+- Successful checkout flow
 
-## Running it locally
+### API Tests
+- GET, POST, PUT, and DELETE request validation
+- HTTP status code assertions
+- Response data validation
+- Negative scenarios, including not-found responses
+
+> Exact scenarios and totals should match the tests currently implemented in this repository.
+
+## Project Structure
+
+```text
+qualityforge-qa-automation/
+├── .github/
+│   └── workflows/
+├── pages/
+├── tests/
+│   ├── api/
+│   ├── ui/
+│   └── auth.setup.ts
+├── playwright.config.ts
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── STUDY_GUIDE.md
+└── README.md
+```
+
+## Getting Started
+
+### Prerequisites
+- Node.js
+- npm
+- Git
+
+### Installation
 
 ```bash
-npm install
-npx playwright install --with-deps chromium   # add "firefox" too if you want that project
+git clone https://github.com/deepakkumar459/qualityforge-qa-automation.git
+cd qualityforge-qa-automation
+npm ci
+npx playwright install chromium
+```
+
+### Run Tests
+
+Run the complete suite:
+
+```bash
 npx playwright test
-npx playwright show-report                     # view the HTML report
 ```
 
-Run a single project:
+Run UI tests:
 
 ```bash
-npx playwright test --project=login
+npx playwright test tests/ui
 ```
 
-## CI
+Run API tests:
 
-Every push/PR to `main` runs the `setup`, `login`, `authenticated`, and `api` projects on Chromium via GitHub Actions (`.github/workflows/playwright.yml`) and uploads the HTML report as a build artifact. Firefox is configured and verified locally but not run on every push, to keep CI fast — see the workflow file for the exact command to add it.
+```bash
+npx playwright test tests/api
+```
+
+Run a specific project:
+
+```bash
+npx playwright test --project=api
+```
+
+Open the HTML report:
+
+```bash
+npx playwright show-report
+```
+
+Check the project configuration if your Playwright project names or paths differ from these examples.
+
+## Continuous Integration
+
+The GitHub Actions workflow is intended to execute automated tests on pushes and pull requests. Review the **Actions** tab for the latest workflow status and available report artifacts.
+
+## Engineering Practices
+
+- Reusable page objects and locators
+- Explicit assertions and negative test cases
+- Separation of UI and API tests
+- Authentication setup where appropriate
+- Reproducible test execution and failure investigation
+
+## Learning and Documentation
+
+See [STUDY_GUIDE.md](./STUDY_GUIDE.md) for framework design decisions and interview preparation notes.
+
+## Author
+
+**Deepak Kumar**
+
+GitHub: [@deepakkumar459](https://github.com/deepakkumar459)
+
+---
+
+*Built as a hands-on portfolio project to demonstrate test automation, debugging, API validation, and CI/CD practices.*
